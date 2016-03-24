@@ -33,6 +33,21 @@ def restaurantMenu(restaurant_id):
 
     return output
 
+
+@app.route('/restaurant/<int:restaurant_id>/new/')
+def newMenuItem(restaurant_id):
+    return "Page to create a new menu item."
+
+
+@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/edit/')
+def editMenuItem(restaurant_id, menu_id):
+    return "Page to edit a menu item."
+
+
+@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete/')
+def deleteMenuItem(restaurant_id, menu_id):
+    return "Page to delete a menu item."
+
 # __main__ is the default name given to the application run by the Python
 # interpreter. The below if statement only runs if this file is being executed
 # by it explicitly. If it's imported, the below won't run
