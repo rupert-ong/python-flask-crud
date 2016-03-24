@@ -1,6 +1,6 @@
 # Python Flask CRUD Application
 
-**Python Web Server CRUD Application** is a persistent Python based CRUD application using the [Flask](http://flask.pocoo.org) framework. This project is written in [Python](https://www.python.org), [SQLAlchemy](http://sqlalchemy.org) and [SQLite](https://www.sqlite.org).
+**Python Flask CRUD Application** is a persistent Python based CRUD application using the [Flask](http://flask.pocoo.org) framework. This project is written in [Python](https://www.python.org), [SQLAlchemy](http://sqlalchemy.org) and [SQLite](https://www.sqlite.org).
 
 
 This side project can be found in the Fullstack Foundations course at [Udacity](https://www.udacity.com), under "Developing with Frameworks"
@@ -23,7 +23,7 @@ Here's what you need to do to view this project:
 4. Run `cd/vagrant/catalog` to change directory.
 5. Run `python database_setup.py` to create the database.
 6. Run `python menu_populator.py` to populate it.
-7. Finally, run `python project` to start the web server.
+7. Finally, run `python project.py` to start the web server.
 8. Open your browser and navigate to `http://localhost:5000`
 
 
