@@ -1,7 +1,9 @@
-from flask import Flask
+from flask import Flask, render_template
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
+
+app = Flask(__name__)  # Pass in default file name as parameter
 
 
 def createDBSession():
@@ -13,8 +15,6 @@ def createDBSession():
     session = DBSession()
     return session
 
-app = Flask(__name__)  # Pass in default file name as parameter
-
 
 # Decorators for methods to execute based on route(s)
 @app.route('/')
@@ -25,13 +25,10 @@ def restaurantMenu(restaurant_id):
         filter(Restaurant.id == restaurant_id).one()
     items = session.query(MenuItem).\
         filter(MenuItem.restaurant_id == restaurant.id).all()
-    output = ""
 
-    for item in items:
-        output += ("<p><strong>%s</strong><br>%s<br>%s</p>") % (
-            item.name, item.price, item.description)
-
-    return output
+    # Path queries into template so escape code has access to these variables
+    return render_template('menu.html', restaurant=restaurant,
+                           items=items)
 
 
 @app.route('/restaurant/<int:restaurant_id>/new/')
