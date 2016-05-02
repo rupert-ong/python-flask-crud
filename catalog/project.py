@@ -22,9 +22,9 @@ def createDBSession():
 def restaurantMenu(restaurant_id):
     session = createDBSession()
     restaurant = session.query(Restaurant).\
-        filter(Restaurant.id == restaurant_id).one()
+        filter_by(id=restaurant_id).one()
     items = session.query(MenuItem).\
-        filter(MenuItem.restaurant_id == restaurant.id).all()
+        filter_by(restaurant_id=restaurant.id).all()
 
     # Path queries into template so escape code has access to these variables
     return render_template('menu.html', restaurant=restaurant,
@@ -46,9 +46,28 @@ def newMenuItem(restaurant_id):
         return render_template('newmenuitem.html', restaurant_id=restaurant_id)
 
 
-@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/edit/')
+@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET', 'POST'])
 def editMenuItem(restaurant_id, menu_id):
-    return "Page to edit a menu item."
+    session = createDBSession()
+    editedItem = session.query(MenuItem).filter_by(id=menu_id).one()
+
+    if request.method == 'POST':
+        if request.form['name']:
+            editedItem.name = request.form['name']
+        if request.form['description']:
+            editedItem.description = request.form['description']
+        if request.form['price']:
+            editedItem.price = request.form['price']
+        if request.form['course']:
+            editedItem.course = request.form['course']
+
+        session.add(editedItem)
+        session.commit()
+
+        return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
+    else:
+        return render_template('editmenuitem.html', restaurant_id=restaurant_id,
+                               menu_id=menu_id, item=editedItem)
 
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete/')
