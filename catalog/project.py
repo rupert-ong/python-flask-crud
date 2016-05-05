@@ -70,9 +70,18 @@ def editMenuItem(restaurant_id, menu_id):
                                menu_id=menu_id, item=editedItem)
 
 
-@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete/')
+@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete/', methods=['GET', 'POST'])
 def deleteMenuItem(restaurant_id, menu_id):
-    return "Page to delete a menu item."
+    session = createDBSession()
+    deletedItem = session.query(MenuItem).filter_by(id=menu_id).one()
+    if request.method == 'POST':
+        session.delete(deletedItem)
+        session.commit()
+        return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
+    else:
+        return render_template('deletemenuitem.html',
+                               restaurant_id=restaurant_id, menu_id=menu_id,
+                               item=deletedItem)
 
 # __main__ is the default name given to the application run by the Python
 # interpreter. The below if statement only runs if this file is being executed
