@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
@@ -41,6 +41,7 @@ def newMenuItem(restaurant_id):
         session = createDBSession()
         session.add(newItem)
         session.commit()
+        flash("New menu item created")  # built in Flask messages (notifications)
         return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
     else:
         return render_template('newmenuitem.html', restaurant_id=restaurant_id)
@@ -63,6 +64,7 @@ def editMenuItem(restaurant_id, menu_id):
 
         session.add(editedItem)
         session.commit()
+        flash("Menu item edited")  # built in Flask messages (notifications)
 
         return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
     else:
@@ -77,6 +79,8 @@ def deleteMenuItem(restaurant_id, menu_id):
     if request.method == 'POST':
         session.delete(deletedItem)
         session.commit()
+        flash("Menu item deleted")  # built in Flask messages (notifications)
+
         return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
     else:
         return render_template('deletemenuitem.html',
@@ -87,5 +91,6 @@ def deleteMenuItem(restaurant_id, menu_id):
 # interpreter. The below if statement only runs if this file is being executed
 # by it explicitly. If it's imported, the below won't run
 if __name__ == '__main__':
+    app.secret_key = 'super_secret_key'  # For development purposes only
     app.debug = True  # Will reload automatically when code changes
     app.run(host='0.0.0.0', port=5000)  # Run on public IP, port 5000
