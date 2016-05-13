@@ -6,38 +6,53 @@ from database_setup import Base, Restaurant, MenuItem
 app = Flask(__name__)  # Pass in default file name as parameter
 
 
-def createDBSession():
+def create_db_session():
     """Connect to database and return session"""
     engine = create_engine('sqlite:///restaurantmenu.db', echo=True)
     Base.metadata.bind = engine
 
-    DBSession = sessionmaker(bind=engine)
-    session = DBSession()
+    db_session = sessionmaker(bind=engine)
+    session = db_session()
     return session
 
-# Make an API Endpoint (GET Request)
+
 @app.route('/restaurants/<int:restaurant_id>/menu/JSON')
-def restaurantMenuJSON(restaurant_id):
-    session = createDBSession()
-    # restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+def restaurant_menu_json(restaurant_id):
+    """Make API endpoint for restaurant's menu items
+
+        Args:
+            restaurant_id:  Integer for restaurant table id
+    """
+    session = create_db_session()
     items = session.query(MenuItem).filter_by(
         restaurant_id=restaurant_id).all()
     return jsonify(MenuItems=[i.serialize for i in items])
 
 
 @app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON')
-def menuItemJSON(restaurant_id, menu_id):
-    session = createDBSession()
-    menuItem = session.query(MenuItem).filter_by(
+def menu_item_json(restaurant_id, menu_id):
+    """Make API endpoint for individual menu item
+
+        Args:
+            restaurant_id:  Integer for restaurant tabe id
+            menu_id:  Integer for menuItem table id
+    """
+    session = create_db_session()
+    menu_item = session.query(MenuItem).filter_by(
         restaurant_id=restaurant_id, id=menu_id).one()
-    return jsonify(MenuItem=menuItem.serialize)
+    return jsonify(MenuItem=menu_item.serialize)
 
 
 # Decorators for methods to execute based on route(s)
 @app.route('/')
 @app.route('/restaurants/<int:restaurant_id>/')
-def restaurantMenu(restaurant_id):
-    session = createDBSession()
+def restaurant_menu(restaurant_id):
+    """Route for restaurant menu page
+
+        Args:
+            restaurant_id:  Integer for restaurant table id
+    """
+    session = create_db_session()
     restaurant = session.query(Restaurant).\
         filter_by(id=restaurant_id).one()
     items = session.query(MenuItem).\
@@ -49,60 +64,77 @@ def restaurantMenu(restaurant_id):
 
 
 @app.route('/restaurant/<int:restaurant_id>/new/', methods=['GET', 'POST'])
-def newMenuItem(restaurant_id):
+def new_menu_item(restaurant_id):
+    """Route for new menu item for a restaurant page
+
+        Args:
+            restaurant_id:  Integer for restaurant table id
+    """
     if request.method == 'POST':
-        newItem = MenuItem(
+        new_item = MenuItem(
             name=request.form['name'], description=request.form['description'],
             price=request.form['price'], course=request.form['course'],
             restaurant_id=restaurant_id)
-        session = createDBSession()
-        session.add(newItem)
+        session = create_db_session()
+        session.add(new_item)
         session.commit()
         flash("New menu item created")  # built in Flask messages (notifications)
-        return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
+        return redirect(url_for('restaurant_menu', restaurant_id=restaurant_id))
     else:
         return render_template('newmenuitem.html', restaurant_id=restaurant_id)
 
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET', 'POST'])
-def editMenuItem(restaurant_id, menu_id):
-    session = createDBSession()
-    editedItem = session.query(MenuItem).filter_by(id=menu_id).one()
+def edit_menu_item(restaurant_id, menu_id):
+    """Route for edit menu item for a restaurant page
+
+        Args:
+            restaurant_id:  Integer for restaurant table id
+            menu_id: Integer for menu_item table id
+    """
+    session = create_db_session()
+    edited_item = session.query(MenuItem).filter_by(id=menu_id).one()
 
     if request.method == 'POST':
         if request.form['name']:
-            editedItem.name = request.form['name']
+            edited_item.name = request.form['name']
         if request.form['description']:
-            editedItem.description = request.form['description']
+            edited_item.description = request.form['description']
         if request.form['price']:
-            editedItem.price = request.form['price']
+            edited_item.price = request.form['price']
         if request.form['course']:
-            editedItem.course = request.form['course']
+            edited_item.course = request.form['course']
 
-        session.add(editedItem)
+        session.add(edited_item)
         session.commit()
         flash("Menu item edited")  # built in Flask messages (notifications)
 
-        return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
+        return redirect(url_for('restaurant_menu', restaurant_id=restaurant_id))
     else:
         return render_template('editmenuitem.html', restaurant_id=restaurant_id,
-                               menu_id=menu_id, item=editedItem)
+                               menu_id=menu_id, item=edited_item)
 
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete/', methods=['GET', 'POST'])
-def deleteMenuItem(restaurant_id, menu_id):
-    session = createDBSession()
-    deletedItem = session.query(MenuItem).filter_by(id=menu_id).one()
+def delete_menu_item(restaurant_id, menu_id):
+    """Route for delete menu item for a restaurant page
+
+        Args:
+            restaurant_id:  Integer for restaurant table id
+            menu_id: Integer for menu_item table id
+    """
+    session = create_db_session()
+    deleted_item = session.query(MenuItem).filter_by(id=menu_id).one()
     if request.method == 'POST':
-        session.delete(deletedItem)
+        session.delete(deleted_item)
         session.commit()
         flash("Menu item deleted")  # built in Flask messages (notifications)
 
-        return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
+        return redirect(url_for('restaurant_menu', restaurant_id=restaurant_id))
     else:
         return render_template('deletemenuitem.html',
                                restaurant_id=restaurant_id, menu_id=menu_id,
-                               item=deletedItem)
+                               item=deleted_item)
 
 # __main__ is the default name given to the application run by the Python
 # interpreter. The below if statement only runs if this file is being executed

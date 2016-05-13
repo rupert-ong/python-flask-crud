@@ -1,4 +1,3 @@
-# Configuration code
 import os
 import sys
 from sqlalchemy import Column, ForeignKey, Integer, String
@@ -11,15 +10,27 @@ Base = declarative_base()
 
 # Class Code
 class Restaurant(Base):
-    # Table Info
+    """Declarative base class for Restaurant Table
+
+        Args:
+            Base: Declarative base instance from SQLAlchemy
+
+    """
+
     __tablename__ = 'restaurant'
 
-    # Mapper
+
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
 
 
 class MenuItem(Base):
+    """Declarative base class for MenuItem table
+
+        Args:
+            Base: Declarative base instance from SQLAlchemy
+    """
+
     __tablename__ = 'menu_item'
 
     name = Column(String(80), nullable=False)
@@ -31,9 +42,13 @@ class MenuItem(Base):
     restaurant = relationship(Restaurant)
 
 
-    # Add function to send JSON objects in a serializable format
     @property
     def serialize(self):
+        """Send JSON objects in a serializable format
+
+            Args:
+                self
+        """
         return {
             'name': self.name,
             'description': self.description,
