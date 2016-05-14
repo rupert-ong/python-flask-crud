@@ -45,6 +45,39 @@ def menu_item_json(restaurant_id, menu_id):
 
 # Decorators for methods to execute based on route(s)
 @app.route('/')
+@app.route('/restaurants')
+def restaurants():
+    """Route for restaurants page"""
+    return "Page to list all restaurants"
+
+
+@app.route('/restaurants/new')
+def new_restaurant():
+    """Route for new restaurant page"""
+    return "Page to new restaurant"
+
+
+@app.route('/restaurants/<int:restaurant_id>/edit')
+def edit_restaurant(restaurant_id):
+    """Route for edit restaurant page
+
+        Args:
+            restaurant_id:  Integer for restaurant table id
+    """
+    return "Page to edit restaurant " + str(restaurant_id)
+
+
+@app.route('/restaurants/<int:restaurant_id>/delete')
+def delete_restaurant(restaurant_id):
+    """Route for edit restaurant page
+
+        Args:
+            restaurant_id:  Integer for restaurant table id
+    """
+    return "Page to delete restaurant " + str(restaurant_id)
+
+
+@app.route('/restaurants/<int:restaurant_id>/menu')
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurant_menu(restaurant_id):
     """Route for restaurant menu page
@@ -63,7 +96,7 @@ def restaurant_menu(restaurant_id):
                            items=items)
 
 
-@app.route('/restaurant/<int:restaurant_id>/new/', methods=['GET', 'POST'])
+@app.route('/restaurant/<int:restaurant_id>/menu/new/', methods=['GET', 'POST'])
 def new_menu_item(restaurant_id):
     """Route for new menu item for a restaurant page
 
@@ -84,7 +117,7 @@ def new_menu_item(restaurant_id):
         return render_template('newmenuitem.html', restaurant_id=restaurant_id)
 
 
-@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/edit/', methods=['GET', 'POST'])
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/edit/', methods=['GET', 'POST'])
 def edit_menu_item(restaurant_id, menu_id):
     """Route for edit menu item for a restaurant page
 
@@ -115,7 +148,7 @@ def edit_menu_item(restaurant_id, menu_id):
                                menu_id=menu_id, item=edited_item)
 
 
-@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete/', methods=['GET', 'POST'])
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/delete/', methods=['GET', 'POST'])
 def delete_menu_item(restaurant_id, menu_id):
     """Route for delete menu item for a restaurant page
 
