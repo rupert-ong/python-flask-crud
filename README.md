@@ -36,6 +36,17 @@ python-web-server-crud/
 ├── Vagrantfile
 └── pg_config.sh
     └── catalog/
+        └── static
+            └── styles.css
+        └── templates
+            ├── deletemenuitem.html
+            ├── deleterestaurant.html
+            ├── editmenuitem.html
+            ├── editrestaurant.html
+            ├── menu.html
+            ├── newmenuitem.html
+            ├── newrestaurant.html
+            └── restaurants.html
         ├── database_setup.py
         ├── menu_populator.py
         └── project.py
