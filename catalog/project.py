@@ -16,6 +16,14 @@ def create_db_session():
     return session
 
 
+@app.route('/restaurants/JSON')
+def restaurants_json():
+    """Make API endpoint for restaurants"""
+    session = create_db_session()
+    items = session.query(Restaurant).all()
+    return jsonify(Restaurants=[i.serialize for i in items])
+
+
 @app.route('/restaurants/<int:restaurant_id>/menu/JSON')
 def restaurant_menu_json(restaurant_id):
     """Make API endpoint for restaurant's menu items

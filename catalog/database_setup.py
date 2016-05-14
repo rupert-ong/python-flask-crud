@@ -23,6 +23,18 @@ class Restaurant(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False)
 
+    @property
+    def serialize(self):
+        """Send JSON objects in a serializable format
+
+            Args:
+                self
+        """
+        return {
+            'name': self.name,
+            'id': self.id
+        }
+    
 
 class MenuItem(Base):
     """Declarative base class for MenuItem table
