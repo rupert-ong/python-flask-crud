@@ -10,7 +10,7 @@
         <h1>Are you sure you want to delete {{restaurant.name}}?</h1>
         <form action="{{url_for('delete_restaurant', restaurant_id=restaurant_id)}}" method="POST">
             <p>
-                <input type="submit" name="submit" value="Delete Restaurant"> | <a href="{{url_for('restaurants')}}">Cancel</a>
+                <input type="submit" name="submit" value="Delete Restaurant"> | <a href="{{url_for('show_restaurants')}}">Cancel</a>
             </p>
         </form>
     </div>

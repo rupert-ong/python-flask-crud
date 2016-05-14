@@ -11,7 +11,7 @@
         <form action="{{url_for('new_menu_item', restaurant_id=restaurant_id)}}" method="POST">
             <p>
                 <label for="name">Name:</label><br>
-                <input type="text" name="name" value=""> <a href="{{url_for('restaurant_menu', restaurant_id=restaurant_id)}}">Cancel</a>
+                <input type="text" name="name" value=""> <a href="{{url_for('show_menu', restaurant_id=restaurant_id)}}">Cancel</a>
             </p>
             <p>
                 <label for="description">Description:</label><br>

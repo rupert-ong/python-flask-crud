@@ -46,7 +46,7 @@ def menu_item_json(restaurant_id, menu_id):
 # Decorators for methods to execute based on route(s)
 @app.route('/')
 @app.route('/restaurants')
-def restaurants():
+def show_restaurants():
     """Route for restaurants page"""
     session = create_db_session()
     items = session.query(Restaurant).all()
@@ -62,7 +62,7 @@ def new_restaurant():
         session.add(new_item)
         session.commit()
         flash("New restaurant created")
-        return redirect(url_for('restaurants'))
+        return redirect(url_for('show_restaurants'))
     else:
         return render_template('newrestaurant.html')
 
@@ -83,7 +83,7 @@ def edit_restaurant(restaurant_id):
         session.add(edited_item)
         session.commit()
         flash("Restaurant edited")
-        return redirect(url_for('restaurants'))
+        return redirect(url_for('show_restaurants'))
     else:
         return render_template('editrestaurant.html', \
             restaurant_id=restaurant_id, restaurant=edited_item)
@@ -102,7 +102,7 @@ def delete_restaurant(restaurant_id):
         session.delete(deleted_item)
         session.commit()
         flash("Restaurant deleted")
-        return redirect(url_for('restaurants'))
+        return redirect(url_for('show_restaurants'))
     else:
         return render_template('deleterestaurant.html', \
             restaurant=deleted_item, \
@@ -111,7 +111,7 @@ def delete_restaurant(restaurant_id):
 
 @app.route('/restaurants/<int:restaurant_id>/menu')
 @app.route('/restaurants/<int:restaurant_id>/')
-def restaurant_menu(restaurant_id):
+def show_menu(restaurant_id):
     """Route for restaurant menu page
 
         Args:
@@ -144,7 +144,7 @@ def new_menu_item(restaurant_id):
         session.add(new_item)
         session.commit()
         flash("New menu item created")  # built in Flask messages (notifications)
-        return redirect(url_for('restaurant_menu', restaurant_id=restaurant_id))
+        return redirect(url_for('show_menu', restaurant_id=restaurant_id))
     else:
         return render_template('newmenuitem.html', restaurant_id=restaurant_id)
 
@@ -174,7 +174,7 @@ def edit_menu_item(restaurant_id, menu_id):
         session.commit()
         flash("Menu item edited")  # built in Flask messages (notifications)
 
-        return redirect(url_for('restaurant_menu', restaurant_id=restaurant_id))
+        return redirect(url_for('show_menu', restaurant_id=restaurant_id))
     else:
         return render_template('editmenuitem.html', restaurant_id=restaurant_id,
                                menu_id=menu_id, item=edited_item)
@@ -195,7 +195,7 @@ def delete_menu_item(restaurant_id, menu_id):
         session.commit()
         flash("Menu item deleted")  # built in Flask messages (notifications)
 
-        return redirect(url_for('restaurant_menu', restaurant_id=restaurant_id))
+        return redirect(url_for('show_menu', restaurant_id=restaurant_id))
     else:
         return render_template('deletemenuitem.html',
                                restaurant_id=restaurant_id, menu_id=menu_id,
