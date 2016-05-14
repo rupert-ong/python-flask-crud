@@ -48,7 +48,9 @@ def menu_item_json(restaurant_id, menu_id):
 @app.route('/restaurants')
 def restaurants():
     """Route for restaurants page"""
-    return "Page to list all restaurants"
+    session = create_db_session()
+    items = session.query(Restaurant).all()
+    return render_template('restaurants.html', restaurants=items)
 
 
 @app.route('/restaurants/new')
